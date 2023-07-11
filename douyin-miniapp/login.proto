@@ -1,0 +1,33 @@
+// 抖音小程序开放接口-登录 douyin-miniapp
+
+syntax = "proto3";
+package developer.toutiao.com;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/douyin-miniapp";
+
+service LoginService {
+	// 登录 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/log-in/code-2-session
+	rpc Code2Session(Code2SessionReq) returns (Code2SessionRes) {
+		option (google.api.http) = {
+			post:"/api/apps/v2/jscode2session", 
+			body: "*"
+		};
+	}
+}
+
+message Code2SessionReq {
+	string appid = 1; // 小程序 ID
+	string secret = 2; // 小程序的 APP Secret，可以在开发者后台获取
+	string code = 3; // login 接口返回的登录凭证
+	string anonymous_code = 4; // login 接口返回的匿名登录凭证 code 和 anonymous_code 至少要有一个
+}
+message Code2SessionRes {
+	int64 err_no = 1;
+	string err_tips = 2;
+	string session_key = 10; // 会话密钥，如果请求时有 code 参数才会返回
+	string openid = 11; // 用户在当前小程序的 ID，如果请求时有 code 参数才会返回
+	string anonymous_openid = 12; // 匿名用户在当前小程序的 ID，如果请求时有 anonymous_code 参数才会返回
+	string unionid = 13; // 用户在小程序平台的唯一标识符，请求时有 code 参数才会返回。如果开发者拥有多个小程序，可通过 unionid 来区分用户的唯一性
+}
+

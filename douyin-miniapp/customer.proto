@@ -1,0 +1,37 @@
+// 抖音小程序开放接口-客服开放接口
+// douyin-miniapp
+
+syntax = "proto3";
+package developer.toutiao.com;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/douyin-miniapp";
+
+service CustomerService {
+	// 获取官方平台客服链接 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/im/customer-service-url
+    rpc GetCustomer (GetCustomerReq) returns (GetCustomerRes) {
+		option (google.api.http) = {
+			get:"/api/apps/chat/customer_service_url",
+		};
+	}
+}
+
+message GetCustomerReq {
+    string appid = 1;
+    string openid = 2;
+    string type = 3;
+    string scene = 4;
+    string order_id = 5;
+    string im_type = 6;
+}
+
+message GetCustomerData {
+    string url = 1;
+}
+
+message GetCustomerRes {
+    int32 err_no = 2;
+    string err_msg = 3;
+    string log_id = 4;
+    GetCustomerData data = 10;
+}

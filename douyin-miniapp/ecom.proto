@@ -1,0 +1,103 @@
+// 抖音小程序开放接口-电商开放接口
+// douyin-miniapp
+
+syntax = "proto3";
+package ma.zijieapi.com;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/douyin-miniapp";
+
+service EcomService {
+	// 注册小程序预览图 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/e-commerce/registermicroappcoverfigure
+    rpc RegisterInfo(RegisterInfoReq) returns (RegisterInfoRes) {
+		option (google.api.http) = {
+			post:"/api/apps/industry/ecom/register_info", 
+			body: "body"
+		};
+	}
+    // 注册小程序积分阈值 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/e-commerce/register-credits-threshold
+    rpc PointLimitRegister(PointLimitRegisterReq) returns (PointLimitRegisterRes) {
+        option (google.api.http) = {
+            post: "/api/apps/industry/ecom/point/limit/register",
+            body: "body",
+        };
+    }
+    // 查询订单的定制完成状态 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/e-commerce/customGoodsOrderDetail
+    rpc GetCustomMadeGoodsStatus(GetCustomMadeGoodsStatusReq) returns (GetCustomMadeGoodsStatusRes) {
+        option (google.api.http) = {
+            post: "/api/apps/industry/ecom/get_custom_made_goods_status",
+            body: "*",
+        };
+    }
+    // 定制类小程序开发者注册信息 同 RegisterInfo https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/e-commerce/customGoodsAPPregister
+    
+    // 退会 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/e-commerce/withdraw
+    rpc LeaveMember(LeaveMemberReq) returns (LeaveMemberRes) {
+        option (google.api.http) = {
+            post: "/api/apps/industry/ecom/v1/shop/leave_member",
+            body: "*",
+        };
+    }
+}
+
+message RegisterInfoReq {
+    message Body {
+        string access_token = 1;
+        string app_id = 2;
+        int32 ecom_microapp_type = 3; // 1-定制商品 2-会员小程序
+        string pre_view_photo_url = 4; // ecom_microapp_type = 2 时填入这个参数
+        string extra = 5;
+        string callback_url = 6; // 回调地址 ecom_microapp_type = 1时填入这个
+    }
+    Body body = 1;
+}
+
+message RegisterInfoRes {
+    int32 err_no = 1;
+    string err_tips = 2;
+    string log_id = 3;
+}
+
+message PointLimitRegisterReq {
+    message Body {
+        string access_token = 1;
+        string app_id = 2;
+        string op_type = 3;
+        int64 single_add_limit = 4;
+        int64 single_reduct_limit = 5;
+        int64 daily_add_count = 6;
+        int64 daily_deduct_count = 7;
+    }
+    Body body = 1;
+}
+
+message PointLimitRegisterRes {
+    int32 err_no = 1;
+    string err_tips = 2;
+    string log_id = 3;
+}
+
+message GetCustomMadeGoodsStatusReq {
+    string app_id = 1;
+    string open_id = 2;
+    string order_id = 3;
+}
+
+message GetCustomMadeGoodsStatusRes {
+    int32 err_no = 1;
+    string err_tips = 2;
+    string log_id = 3;
+    int32 success_code = 4;
+}
+
+message LeaveMemberReq {
+    string app_id = 1;
+    int64 shop_id = 2;
+    string open_id = 3;
+}
+
+message LeaveMemberRes {
+    string app_id = 1;
+    string open_id = 2;
+    string order_id = 3;
+}

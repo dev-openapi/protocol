@@ -1,0 +1,78 @@
+// 抖音小程序开放接口-分享 douyin-miniapp
+
+syntax = "proto3";
+package developer.toutiao.com;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/douyin-miniapp";
+
+service ShareService {
+	// 生成分享 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/share/url-link-generate
+	rpc Generate(GenerateReq) returns (GenerateRes) {
+		option (google.api.http) = {
+			post:"/api/apps/url_link/generate", 
+			body: "*"
+		};	
+	}	
+	// 查询生成的分享信息 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/share/url-link-query
+	rpc QueryInfo(QueryInfoReq) returns (QueryInfoRes) {
+		option (google.api.http) = {
+			post:"/api/apps/url_link/query_info", 
+			body: "*"
+		};	
+	}		
+	// 查询配额 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/share/url-link-query-quota
+	rpc QueryQuota(QueryQuotaReq) returns (QueryQuotaRes) {
+		option (google.api.http) = {
+			post:"/api/apps/url_link/query_quota", 
+			body: "*"
+		};	
+	}
+}
+
+message GenerateReq {
+	string access_token = 1;
+	string ma_app_id = 2; // 小程序ID
+	string app_name = 3; // 宿主名称，可选 douyin，douyinlite
+	string path = 4; // 通过URL Link进入的小程序页面路径，必须是已经发布的小程序存在的页面，不可携带 query。path 为空时会跳转小程序主页。
+	string query = 5; // 通过URL Link进入小程序时的 query（json形式），若无请填{}。最大1024个字符，只支持数字，大小写英文以及部分特殊字符：`{}!#$&'()*+,/:;=?@-._~%``。
+	int64 expire_time = 6; // 到期失效的URL Link的失效时间。为 Unix 时间戳，实际失效时间为距离当前时间小时数，向上取整。最长间隔天数为180天。
+}
+message GenerateRes {
+	int64 err_no = 1;
+	string err_tips = 2;
+	string url_link = 3; // 生成的url
+}
+
+message QueryInfoReq {
+	string access_token = 1;
+	string url_link = 2; // 生成的url_link
+	string ma_app_id = 3; // 小程序ID 
+}
+message URLLinkInfo {
+	int64 create_time = 1; // 创建时间，为 Unix 时间戳
+	string ma_app_id = 2; // 小程序ID
+	string app_name = 3; // 宿主名称，可选 douyin，douyinlite
+	string path = 4; // 小程序页面路径。
+	string query = 5; // 小程序页面query。
+	int64 expire_time = 6; // 到期失效时间，为 Unix 时间戳。
+}
+message QueryInfoRes {
+	int64 err_no = 1;
+	string err_tips = 2;	
+	URLLinkInfo url_link_info = 10; // url_link配置
+}
+
+message QueryQuotaReq {
+	string access_token =1; // 接口调用凭证
+	string ma_app_id = 2; // 小程序ID
+}
+message URLLInkQuota {
+	int32 url_link_used = 1; // url_link 已生成次数
+	int32 url_link_limit = 2; // url_link 生成次数上限
+}
+message QueryQuotaRes {
+	int64 err_no = 1;
+	string err_tips = 2;
+	URLLInkQuota url_link_quota = 10; // quota 配置
+}

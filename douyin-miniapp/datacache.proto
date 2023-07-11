@@ -1,0 +1,64 @@
+// 抖音小程序开放接口-数据缓存 douyin-miniapp
+
+syntax = "proto3";
+package developer.toutiao.com;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/douyin-miniapp";
+
+service DatacacheService {
+	// 设置用户缓存 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/data-caching/set-user-storage
+	rpc SetUserStorage(SetUserStorageReq) returns (SetUserStorageRes) {
+		option (google.api.http) = {
+			post:"/api/apps/set_user_storage", 
+			body: "body"
+		};	
+	}
+	// 清除用户缓存 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/data-caching/remove-user-storage
+	rpc RemoveUserStorage(RemoveUserStorageReq) returns (RemoveUserStorageRes) {
+		option (google.api.http) = {
+			post:"/api/apps/remove_user_storage", 
+			body: "body"
+		};	
+	}
+}
+
+message KvItem {
+	string key = 1; // 键
+	string value = 2; // 值
+}
+
+message SetUserStorageReq {
+	string access_token = 1; // 服务端 API 调用标识，获取方法
+	string openid = 2; // 登录用户唯一标识 获取方法
+	string signature = 3; // 用户登录态签名，参考用户登录态签名算法
+	string sig_method = 4; // 用户登录态签名的编码方法，参考用户登录态签名算法
+	message Body {
+		repeated KvItem kv_list = 1; // (body 中) 要设置的用户数据
+	}
+	Body body = 10;
+}
+message SetUserStorageRes {
+	int64 error = 1; // 错误号, 正确返回时为 0
+	int64 errcode = 2; // 详细错误号
+	string errmsg = 3; // 错误信息
+	string message = 4; // 错误信息（同 errmsg）
+}
+
+message RemoveUserStorageReq {
+	string access_token = 1; // 服务端 API 调用标识，获取方法
+	string openid = 2; // 登录用户唯一标识 获取方法
+	string signature = 3; // 用户登录态签名，参考用户登录态签名算法
+	string sig_method = 4; // 用户登录态签名的编码方法，参考用户登录态签名算法
+	message Body {
+		repeated string key = 1; // (body 中) 要删除的用户数据的 key list
+	}
+	Body body = 10;
+}
+message RemoveUserStorageRes {
+	int64 error = 1; // 错误号, 正确返回时为 0
+	int64 errcode = 2; // 详细错误号
+	string errmsg = 3; // 错误信息
+	string message = 4; // 错误信息（同 errmsg）
+}
+

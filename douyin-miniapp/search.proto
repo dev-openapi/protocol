@@ -1,0 +1,111 @@
+// 抖音小程序开放接口-搜索 douyin-miniapp
+
+syntax = "proto3";
+package developer.toutiao.com;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/douyin-miniapp";
+
+service SearchService {
+	// 创建抖音搜索直达子服务 header带access-token https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/search/create-ma-sub-service
+    rpc CreateMaSubService(CreateMaSubServiceReq) returns (CreateMaSubServiceRes) {
+		option (google.api.http) = {
+			post:"/api/apps/v1/capacity/create_ma_sub_service", 
+			body: "*"
+		};
+	}
+    // 查询已创建的抖音搜索直达子服务列表 header带access_token https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/search/query-ma-sub-service
+    rpc QueryMaSubService(QueryMaSubServiceReq) returns (QueryMaSubServiceRes) {
+        option (google.api.http) = {
+            get: "/api/apps/v1/capacity/query_ma_sub_service"
+        };
+    }
+    // 删除抖音搜索直达子服务 header带access_token https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/search/delete-ma-sub-service
+    rpc DeleteMaSubService(DeleteMaSubServiceReq) returns (DeleteMaSubServiceRes) {
+        option (google.api.http) = {
+            delete: "/api/apps/v1/capacity/delete_ma_sub_service",
+        };
+    }
+    // 校验是否有搜索直达服务的创建权限 header带access_token https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/search/check-permission
+    rpc CheckMaSubService(CheckMaSubServiceReq) returns (CheckMaSubServiceRes) {
+        option (google.api.http) = {
+            get: "/api/apps/v1/capacity/check_ma_sub_service",
+        };
+    }
+}
+
+message CreateMaSubServiceReq {
+    string sub_service_name = 1; // 搜索直达子服务的名称（服务名称的长度为2-20）
+    repeated string search_key_word = 2; // 该子服务可用于检索的关键词 关键词的个数为2～6个）（每个关键词的长度为2-20）
+    string start_page_url = 3; // 对应功能服务页面的路径链接
+}
+
+message CreateMaSubServiceData {}
+
+message CreateMaSubServiceRes {
+    int32 err_no = 1; // 错误码
+    string err_msg = 2; // 错误信息
+    string log_id = 3; // log_id用于向内部开发人员进行反馈
+    CreateMaSubServiceData data = 4; // 响应结果 
+}
+
+message QueryMaSubServiceReq {
+    int64 approval_state = 1; // 要查询已创建服务的状态类型，0-审核中/1-已通过/2-未通过，传0就表示只查状态为审核中的服务，不传就表示查询全部状态的服务
+    int64 page_no = 2; // 查询的页号，从1开始
+    int64 page_size = 3; // 查询一页的大小，从1开始
+}
+
+message ApprovalReason {
+    string reason = 1;
+    string audit_field = 2;
+  }
+  
+  message MaSubServiceInfo {
+    string micro_app_id = 1;
+    string sub_service_id = 2;
+    string sub_service_name = 3;
+    string micro_app_icon = 4;
+    repeated string search_key_word = 5;
+    string start_page_url = 6;
+    int32 approval_state = 7;
+    string create_time = 8;
+    repeated ApprovalReason reasons = 9;
+  }
+
+message QueryMaSubServiceData {
+    bool has_more = 1; // 是否还有更多的数据，因为是分页查询，所以在查询到最后一页之前，此值都为true
+    int64 total = 2; // 总共有多少数据，便于开发者制定合理的分页参数
+    repeated MaSubServiceInfo ma_sub_service_info_list = 3;
+}
+
+message QueryMaSubServiceRes {
+    int32 err_no = 1;
+    string err_msg = 2;
+    string log_id = 3;
+    QueryMaSubServiceData data = 10;
+}
+
+message DeleteMaSubServiceReq {
+    string sub_service_id = 1;
+}
+
+message DeleteMaSubServiceData {}
+
+message DeleteMaSubServiceRes {
+    int32 err_no = 1;
+    string err_msg = 2;
+    string log_id = 3;
+    DeleteMaSubServiceData data = 10;
+}
+
+message CheckMaSubServiceReq {}
+
+message CheckMaSubServiceData {
+    bool has_permission = 1;
+}
+message CheckMaSubServiceRes {
+    int32 err_no = 1;
+    string err_msg = 2;
+    string log_id = 3;
+    CheckMaSubServiceData data = 10;
+}
