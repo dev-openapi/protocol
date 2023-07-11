@@ -1,0 +1,105 @@
+// 微信小程序接口-openapi管理 weixin-miniprogram
+syntax = "proto3";
+package api.weixin.qq.com;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/wx-miniprogram";
+
+service MgntService {
+	// 重置 API 调用次数 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/openApi-mgnt/clearQuota.html
+	rpc ClearQuota(ClearQuotaReq) returns (ClearQuotaRes) {
+		option (google.api.http) = {
+			post: "/cgi-bin/clear_quota?access_token={access_token}",
+			body: "body",
+		};
+	}
+	// 查询API调用额度 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/openApi-mgnt/getApiQuota.html
+	rpc GetApiQuota(GetApiQuotaReq) returns (GetApiQuotaRes) {
+		option (google.api.http) = {
+			post: "/cgi-bin/openapi/quota/get?access_token={access_token}",
+			body: "body",
+		};
+	}
+	// 查询rid信息 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/openApi-mgnt/getRidInfo.html
+	rpc GetRidInfo(GetRidInfoReq) returns (GetRidInfoRes) {
+		option (google.api.http) = {
+			post: "/cgi-bin/openapi/rid/get?access_token={access_token}"
+			body: "body",
+		};
+	}
+	// 使用AppSecret重置 API 调用次数 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/openApi-mgnt/clearQuotaByAppSecret.html
+	rpc ClearQuotaV2(ClearQuotaV2Req) returns (ClearQuotaV2Res) {
+		option (google.api.http) = {
+			post: "/cgi-bin/clear_quota/v2",
+			body: "*"
+		};
+	}
+}
+
+message ClearQuotaData {
+	string appid = 1; // 要被清空的账号的appid
+}
+
+message ClearQuotaReq {
+	string access_token = 1; // 接口调用凭证，该参数为 URL 参数，非 Body 参数。使用access_token或者authorizer_access_token
+	message Body {
+		string appid = 1;
+	}
+	Body body = 2; // 要被清空的账号的appid
+}
+
+message ClearQuotaRes {
+	int32 errcode = 1; // 错误码
+	string errmsg = 2; // 错误信息
+}
+
+message GetApiQuotaReq {
+	string access_token = 1; // 接口调用凭证，该参数为 URL 参数，非 Body 参数。使用access_token或者authorizer_access_token
+	message Body {
+		string cgi_path = 1;
+	}
+	Body body = 2; // api的请求地址，例如"/cgi-bin/message/custom/send";不要前缀“https://api.weixin.qq.com” ，也不要漏了"/",否则都会76003的报错
+}
+
+message GetApiQuotaRes {
+	int32 errcode = 1; // 返回码
+	string errmsg = 2; // 错误信息
+	message Quota {
+		int32 daily_limit = 1; // 当天该账号可调用该接口的次数 
+		int32 used = 2; // 当天已经调用的次数
+		int32 remain = 3; // 当天剩余调用次数
+	}
+	Quota quota = 3; // quota详情
+}
+
+message GetRidInfoReq {
+	string access_token = 1;
+	message Body {
+		string rid = 1;
+	}
+	Body body = 2;
+}
+
+message GetRidInfoRes {
+	int32 errcode = 1;
+	string errmsg = 2;
+	message Request {
+		int64 invoke_time = 1; // 发起请求的时间戳
+		int64 cost_in_ms = 2; // 请求毫秒级耗时
+		string request_url = 3; // 请求的 URL 参数
+		string request_body = 4; // post请求的请求参数
+		string response_body = 5; // 接口请求返回参数
+		string client_ip = 6; // 接口请求的客户端ip
+	}
+	Request request = 3; // 该 rid 对应的请求详情
+}
+
+message ClearQuotaV2Req {
+	string appid = 1; // 要被清空的账号的appid
+	string appsecret = 2; // 唯一凭证密钥，即 AppSecret，获取方式同 appid
+}
+
+message ClearQuotaV2Res {
+	int32 errcode = 1; // 错误码
+	string errmsg = 2; // 错误信息
+}

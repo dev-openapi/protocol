@@ -1,0 +1,26 @@
+// 微信小程序接口-接口调用凭证 weixin-miniprogram
+syntax = "proto3";
+package api.weixin.qq.com;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/wx-miniprogram";
+
+service TokenService {
+	// 获取接口调用凭据 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-access-token/getAccessToken.html
+    rpc GetAccessToken(GetAccessTokenReq) returns (GetAccessTokenRes) {
+		option (google.api.http) = {
+			get:"/cgi-bin/token", 
+		};
+	};
+}
+
+message GetAccessTokenReq {
+	string grant_type = 1; // 填写 client_credential
+	string appid = 2; // 小程序唯一凭证，即 AppID，可在「微信公众平台 - 设置 - 开发设置」页中获得。（需要已经成为开发者，且帐号没有异常状态）
+	string secret = 3; //小程序唯一凭证密钥，即 AppSecret，获取方式同 appid
+}
+
+message GetAccessTokenRes {
+	string access_token = 1; // 获取到的凭证
+	int32 expires_in = 2; // 凭证有效时间，单位：秒。目前是7200秒之内的值。
+}

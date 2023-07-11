@@ -1,0 +1,31 @@
+// 微信小程序接口-小程序登录 weixin-miniprogram
+syntax = "proto3";
+package api.weixin.qq.com;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/wx-miniprogram";
+
+service LoginService {
+	// 小程序登录 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-login/code2Session.html
+	rpc Code2Session(Code2SessionReq) returns (Code2SessionRes) {
+		option (google.api.http) = {
+			get: "/sns/jscode2session"
+		};
+	}
+}
+
+message Code2SessionReq {
+	string appid = 1; // 小程序 appId
+	string secret = 2; // 小程序 appSecret
+	string js_code = 3; // 登录时获取的 code，可通过wx.login获取
+	string grant_type = 4; // 授权类型，此处只需填写 authorization_code
+}
+
+message Code2SessionRes {
+	int32 errcode = 1; // 错误码
+	string errmsg = 2; // 错误信息
+	string openid = 3; // 用户唯一标识
+	string unionid = 4; // 用户在开放平台的唯一标识符，若当前小程序已绑定到微信开放平台帐号下会返回，详见 UnionID 机制说明。
+	string session_key = 5; // 会话密钥
+}
+

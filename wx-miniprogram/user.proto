@@ -1,0 +1,134 @@
+// 微信小程序接口-用户信息 weixin-miniprogram
+syntax = "proto3";
+package api.weixin.qq.com;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/wx-miniprogram";
+
+service UserService {
+	// 获取插件用户openpid https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/basic-info/getPluginOpenPId.html
+	rpc GetPluginOpenPId(GetPluginOpenPIdReq) returns (GetPluginOpenPidRes) {
+		option (google.api.http) = {
+			post: "/wxa/getpluginopenpid?access_token={access_token}"
+			body: "body",
+		};
+	}
+	// 检查加密信息 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/basic-info/checkEncryptedData.html
+	rpc CheckEncryptedData(CheckEncryptedDataReq) returns (CheckEncryptedDataRes) {
+		option (google.api.http) = {
+			post: "/wxa/business/checkencryptedmsg?access_token={access_token}"
+			body: "body",
+		};
+	}
+	// 支付后获取 Unionid https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/basic-info/getPaidUnionid.html
+	rpc GetPaidUnionid(GetPaidUnionidReq) returns (GetPaidUnionidRes) {
+		option (google.api.http) = {
+			get: "/wxa/getpaidunionid?access_token={access_token}"
+		};
+	}
+	// 获取用户encryptKey https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/internet/getUserEncryptKey.html
+	rpc GetUserEncryptKey(GetUserEncryptKeyReq) returns (GetUserEncryptKeyRes) {
+		option (google.api.http) = {
+			post: "/wxa/business/getuserencryptkey?access_token={access_token}",
+			body: "body",
+		};
+	}
+	// 获取手机号 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/phone-number/getPhoneNumber.html
+	rpc GetPhoneNumber(GetPhoneNumberReq) returns (GetPhoneNumberRes) {
+		option (google.api.http) = {
+			post: "/wxa/business/getuserphonenumber?access_token={access_token}",
+			body: "body",
+		};
+	}
+}
+
+message GetPluginOpenPIdReq {
+	string access_token = 1; // 接口调用凭证，该参数为 URL 参数，非 Body 参数。使用access_token或者authorizer_access_token
+	message Body {
+		string code = 1;
+	}
+	Body body = 2; // 通过 wx.pluginLogin 获得的插件用户标志凭证 code，有效时间为5分钟，一个 code 只能获取一次 openpid。
+}
+
+message GetPluginOpenPidRes {
+	int32 errcode = 1; // 错误码
+	string errmsg = 2; // 错误信息
+	string openpid = 3; // 插件用户的唯一标识。
+}
+
+
+message CheckEncryptedDataReq {
+	string access_token = 1; // 接口调用凭证，该参数为 URL 参数，非 Body 参数。使用access_token或者authorizer_access_token
+	message Body {
+		string encrypted_msg_hash = 1; // 加密数据的sha256，通过Hex（Base16）编码后的字符串
+	}
+	Body body = 2;
+}
+
+message CheckEncryptedDataRes {
+	int32 errcode = 1; // 错误码
+	string errmsg = 2;
+	bool valid = 3; // 是否是合法的数据
+	int64 create_time = 4; // 加密数据生成的时间戳
+}
+
+message GetPaidUnionidReq {
+	string access_token = 1; // 接口调用凭证，该参数为 URL 参数，非 Body 参数。使用access_token或者authorizer_access_token
+	string openid = 2; // 支付用户唯一标识
+	string transaction_id = 3; // 微信支付订单号
+	string mch_id = 4; // 微信支付分配的商户号，和商户订单号配合使用
+	string out_trade_no = 5; // 微信支付商户订单号，和商户号配合使用
+}
+
+message GetPaidUnionidRes {
+	int32 errcode = 1;
+	string errmsg = 2;
+	string unionid = 3; // 用户唯一标识，调用成功后返回
+}
+
+message GetUserEncryptKeyReq {
+	string access_token = 1; // 接口调用凭证，该参数为 URL 参数，非 Body 参数。使用access_token或者authorizer_access_token
+	message Body {
+		string openid = 1; // 	用户的openid
+		string signature = 2; // 用 sessionkey 对空字符串签名得到的结果。session_key可通过code2Session接口获得。
+		string sig_method = 3; // 签名方法，只支持 hmac_sha256
+	}
+	Body body = 2;
+}
+
+message GetUserEncryptKeyRes {
+	int32 errcode = 1;
+	string errmsg = 2;
+	message KeyInfo {
+		string encrypt_key = 1; // 加密key
+		int64 version = 2; // key的版本号
+		int64 expire_in = 3; // 剩余有效时间
+		string iv = 4; // 加密iv
+		int64 create_time = 5; // 创建 key 的时间戳
+	}
+	repeated KeyInfo key_info_list = 3; // 用户最近三次的加密 key 列表
+}
+
+message GetPhoneNumberReq {
+	string access_token = 1; // 接口调用凭证，该参数为 URL 参数，非 Body 参数。使用access_token或者authorizer_access_token
+	message Body {
+		string code = 1; // 手机号获取凭证
+	}
+	Body body = 2;
+}
+
+message GetPhoneNumberRes {
+	int32 errcode = 1;
+	string errmsg = 2;
+	message PhoneInfo {
+		string phoneNumber = 1; //用户绑定的手机号（国外手机号会有区号）
+		string purePhoneNumber = 2; // 没有区号的手机号
+		string countryCode = 3; // 区号
+		Watermark watermark = 4; // 数据水印
+	}
+	message Watermark {
+		string appid = 1; // 小程序appid
+		int64 timestamp = 2; // 用户获取手机号操作的时间戳
+	}
+	PhoneInfo phone_info = 3; // 用户手机号信息
+}
