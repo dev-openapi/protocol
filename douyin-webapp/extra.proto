@@ -1,0 +1,16 @@
+// 抖音移动/网站应用接口 douyin-webapp
+
+syntax = "proto3";
+package open.douyin.com ;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/douyin-webapp";
+
+message Extra {
+    string log_id = 1;
+    int64 now = 2;
+    int32 error_code = 3;
+    string description = 4;
+    int32 sub_error_code = 5;
+    string sub_description = 6;
+}
