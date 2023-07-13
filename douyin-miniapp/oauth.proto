@@ -1,0 +1,35 @@
+// 抖音小程序开放接口-接口调用凭证 douyin-miniapp
+
+syntax = "proto3";
+package open.douyin.com ;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/douyin-miniapp";
+
+service OauthService {
+	// 生成client_token https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/account-permission/client-token
+	rpc GetClientToken(GetClientTokenReq) returns (GetClientTokenRes) {
+		option (google.api.http) = {
+			post: "/oauth/client_token/",
+			body: "*,form"
+		};
+	};
+}
+
+
+message GetClientTokenReq {
+	string client_key = 1;
+	string client_secret = 2;
+	string grant_type = 3;
+}
+
+message GetClientTokenRes {
+	message Data {
+		int64 expires_in = 1;
+		string access_token = 2;
+		string description = 3;
+		int64 error_code = 4;
+	}
+	string message  = 1;
+	Data data = 2;
+}
