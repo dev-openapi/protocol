@@ -1,0 +1,36 @@
+// B站开放接口 - 账号授权 bilibili-webapp
+
+syntax = "proto3";
+package api.bilibili.com ;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/bilibili-webapp";
+
+service OauthService {
+    rpc GetAccessToken(GetAccessTokenReq) returns (GetAccessTokenRes) {
+        option (google.api.http) = {
+            post: "/x/account-oauth2/v1/token",
+        };
+    }
+}
+
+message GetAccessTokenReq {
+    string client_id = 1;
+    string client_secret = 2;
+    string grant_type = 3;
+    string code = 4;
+}
+
+message GetAccessTokenRes {
+    message Data {
+        string access_token = 1;
+        int64 expires_in = 2;
+        string refresh_token = 3;
+        repeated string scopes = 4;
+    }
+
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    Data data = 4;
+}
