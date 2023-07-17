@@ -1,0 +1,32 @@
+// B站开放接口 - 用户管理 bilibili-webapp
+
+syntax = "proto3";
+package member.bilibili.com ;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/bilibili-webapp";
+
+service AccountService {
+    rpc GetAccountInfo(GetAccountInfoReq) returns (GetAccountInfoRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/user/account/info",
+        };
+    }
+}
+
+message GetAccountInfoReq {
+    string client_id = 1;
+    string access_token = 2;
+}
+
+message GetAccountInfoRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        string name = 1;
+        string face = 2;
+        string openid = 3;
+    }
+    Data  data = 10;
+}
