@@ -7,11 +7,18 @@ import "google/api/annotations.proto";
 option go_package = "github.com/dev-openapi/bilibili-webapp";
 
 service OauthService {
+    // 获取AccessToken https://openhome.bilibili.com/doc/4/eaf0e2b5-bde9-b9a0-9be1-019bb455701c
     rpc GetAccessToken(GetAccessTokenReq) returns (GetAccessTokenRes) {
         option (google.api.http) = {
             post: "/x/account-oauth2/v1/token",
         };
-    }
+    };
+    // 刷新token https://openhome.bilibili.com/doc/4/eaf0e2b5-bde9-b9a0-9be1-019bb455701c
+    rpc RefreshToken(RefreshTokenReq) returns (RefreshTokenRes) {
+        option (google.api.http) = {
+            post: "/x/account-oauth2/v1/refresh_token",
+        };
+    };
 }
 
 message GetAccessTokenReq {
@@ -29,6 +36,25 @@ message GetAccessTokenRes {
         repeated string scopes = 4;
     }
 
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    Data data = 4;
+}
+
+message RefreshTokenReq {
+    string client_id = 1;
+    string client_secret = 2;
+    string grant_type = 3;
+    string refresh_token = 4;
+}
+
+message RefreshTokenRes {
+    message Data {
+        string refresh_token = 1;
+        string access_token = 2;
+        int64 expires_in = 3;
+    }
     int32 code = 1;
     string message = 2;
     int32 ttl = 3;
