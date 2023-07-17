@@ -7,6 +7,7 @@ import "google/api/annotations.proto";
 option go_package = "github.com/dev-openapi/bilibili-webapp";
 
 service AccountService {
+    // 获取用户公开信息 https://openhome.bilibili.com/doc/4/feb66f99-7d87-c206-00e7-d84164cd701c
     rpc GetAccountInfo(GetAccountInfoReq) returns (GetAccountInfoRes) {
         option (google.api.http) = {
             get: "/arcopen/fn/user/account/info",

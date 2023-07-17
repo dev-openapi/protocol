@@ -1,0 +1,140 @@
+// B站开放接口 - 视频稿件管理 bilibili-webapp
+
+syntax = "proto3";
+package member.bilibili.com ;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/bilibili-webapp";
+
+service ArchiveService {
+    // 查询单一视频稿件详情 https://openhome.bilibili.com/doc/4/d9554788-dcef-f139-6217-b487d41c3826
+    rpc GetArchive(GetArchiveReq) returns (GetArchiveRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/archive/view",
+        };
+    }
+    // 查询用户视频稿件列表 https://openhome.bilibili.com/doc/4/a24030b7-6b8f-b36c-32d8-a4aae67fcc35
+    rpc BatchGetArchive(BatchGetArchiveReq) returns (BatchGetArchiveRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/archive/viewlist",
+        };
+    }
+    // 视频稿件编辑 https://openhome.bilibili.com/doc/4/ddfbe54d-b4ab-340e-c698-933b9a3c619c
+    rpc EditArchive(EditArchiveReq) returns (EditArchiveRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/archive/edit",
+            body: "body",
+        };
+    }
+    // 视频稿件删除 https://openhome.bilibili.com/doc/4/23d78390-4119-1e5f-2bbe-b45bd5cecdb0
+    rpc DeleteArchive(DeleteArchiveReq) returns (DeleteArchiveRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/archive/delete",
+            body: "body",
+        };
+    }
+}
+
+message GetArchiveReq {
+    string client_id = 1;
+    string access_token = 2;
+    string resource_id = 3;
+}
+
+message GetArchiveRes {
+    int32 code = 1;
+    string message = 2;
+    ArchiveInfo data = 10;
+}
+
+message BatchGetArchiveReq {
+    string client_id = 1;
+    string access_token = 2;
+    int64 pn = 3;
+    int64 ps = 4;
+    string status = 5;
+}
+
+message BatchGetArchiveRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttle = 3;
+    message Data {
+        Page page = 1;
+        repeated ArchiveInfo list = 2;
+    }
+    Data data = 4;
+}
+
+message EditArchiveReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        string resource_id = 1;
+        string title = 2;
+        string cover = 3;
+        int64 tid = 4;
+        int32 no_reprint = 5;
+        string desc = 6;
+    }
+    Body body = 3;
+}
+
+message EditArchiveRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3; 
+    message Data {
+        string resource_id = 1;
+    }
+    Data data = 4;
+}
+
+message DeleteArchiveReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        string resource_id = 1;
+    }
+    Body body = 3;
+}
+
+message DeleteArchiveRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttle = 3;
+}
+
+message Page {
+    int64 pn = 1;
+    int64 ps = 2;
+    int64 total = 3;
+}
+
+message VideoInfo {
+    int64 cid = 1;
+    string filename = 2;
+    int64 duration = 3;
+    string share_url = 4;
+    string iframe_url = 5;
+}
+
+message AdditInfo {
+    int32 state = 1;
+    string state_desc = 2;
+    string reject_reason = 3;
+}
+
+message ArchiveInfo {
+    string resource_id = 1;
+    string cover = 2;
+    int64 tid = 3;
+    int32 no_reprint = 4;
+    string desc = 5;
+    string tag = 6;
+    int32 copyright = 7;
+    int64 ctime = 8;
+    int64 ptime = 9;
+    VideoInfo video_info = 10;
+    AdditInfo addit_info = 11;
+}
