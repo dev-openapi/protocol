@@ -1,0 +1,184 @@
+// B站开放接口 - 数据开放服务 bilibili-webapp
+
+syntax = "proto3";
+package member.bilibili.com ;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/bilibili-webapp";
+
+service OpendataService {
+    // 获取用户数据  https://openhome.bilibili.com/doc/4/90936ab5-7c06-e24f-2ad0-0fd6e10c7386
+    rpc GetUserData(GetUserDataReq) returns (GetUserDataRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/data/user/stat",
+        };
+    }
+    // 获取单视频数据 https://openhome.bilibili.com/doc/4/3f46ac2e-1318-3aa0-5548-0d9fd624d520
+    rpc GetArchiveData(GetArchiveDataReq) returns (GetArchiveDataRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/data/arc/stat",
+        };
+    }
+    // 获取整体视频增量数据 https://openhome.bilibili.com/doc/4/708a4ce5-5a6e-d8ce-b2e8-ff8a26a83b05
+    rpc GetArchiveIncData(GetArchiveIncDataReq) returns (GetArchiveIncDataRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/data/arc/inc-stats",
+        };
+    }
+    // 获取单一专栏数据 https://openhome.bilibili.com/doc/4/46903ddc-1264-ddac-a3c7-559d12f32118
+    rpc GetArticleData(GetArticleDataReq) returns (GetArticleDataRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/data/art/stat",
+            body: "body",
+        };
+    }
+    // 获取整体专栏增量数据 https://openhome.bilibili.com/doc/4/f5d81e34-ab1b-ac92-2c5e-34c3c0d33828
+    rpc GetArticleIncData(GetArticleIncDataReq) returns (GetArticleIncDataRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/data/art/inc-stats",
+        };
+    }
+}
+
+message GetUserDataReq {
+    string client_id = 1;
+    string access_token = 2;
+}
+
+message GetUserDataRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        int64 following= 1;
+        int64 follower = 2;
+        int64 arc_passed_total = 3;
+    }
+    Data data = 4;
+}
+
+message GetArchiveDataReq {
+    string client_id = 1;
+    string access_token = 2;
+    string resource_id = 3;
+}
+
+
+
+message GetArchiveDataRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        string title = 1;
+        int64 ptime = 2;
+        int64 view = 3;
+        int64 danmaku = 4;
+        int64 reply = 5;
+        int64 favorite = 6;
+        int64 coin = 7;
+        int64 share = 8;
+        int64 like = 9;
+    }
+    Data data = 4;
+}
+
+message GetArchiveIncDataReq {
+    string client_id = 1;
+    string access_token = 2;
+}
+
+message GetArchiveIncDataRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        int64 inc_click = 1;
+        int64 inc_dm = 2;
+        int64 icn_reply = 3;
+        int64 inc_fav = 4;
+        int64 inc_coin = 5;
+        int64 inc_share = 6;
+        int64 inc_like = 7;
+        int64 inc_elec = 8;
+    }
+    Data data = 4;
+}
+
+message GetArticleDataReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        string ids = 1;
+    }
+    Body body = 3;
+}
+
+message ArticleData {
+    message Category {
+        int64 id = 1;
+        int64 parent_id = 2;
+        string name = 3;
+    }
+    message Stats {
+        int64 view = 1;
+        int64 favorite = 2;
+        int64 like = 3;
+        int64 dislike = 4;
+        int64 reply = 5;
+        int64 share = 6;
+        int64 coin = 7;
+    }
+    message List {
+        int64 id = 1;
+        string name = 2;
+        string image_url = 3;
+        int64 update_time = 4;
+        int64 ctime = 5;
+        int64 publish_time = 6;
+        string summary = 7;
+        int64 words = 8;
+    }
+
+    int64 id = 1;
+    Category category = 2;
+    string title = 3;
+    string summary = 4;
+    string banner_url = 5;
+    int64 template_id = 6;
+    int64 state = 7;
+    repeated string image_urls = 8;
+    int64 publish_time = 9;
+    int64 ctime = 10;
+    Stats stats = 11;
+    string reason = 12;
+    int64 words = 13;
+    List list = 14;
+    string top_video_bvid = 15;
+}
+
+message GetArticleDataRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    map<string, ArticleData> data = 4;
+}
+
+message GetArticleIncDataReq {
+    string client_id = 1;
+    string access_token = 2;
+}
+
+message GetArticleIncDataRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        int64 icn_reply = 1;
+        int64 inc_read = 2;
+        int64 inc_fav = 3;
+        int64 inc_likes = 4;
+        int64 inc_share = 5;
+        int64 inc_coin = 6;
+    }
+}

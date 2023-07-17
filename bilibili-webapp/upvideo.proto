@@ -1,0 +1,7 @@
+// B站开放接口 - 视频稿件投递 bilibili-webapp
+
+syntax = "proto3";
+package member.bilibili.com ;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/bilibili-webapp";
