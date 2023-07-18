@@ -1,0 +1,151 @@
+// B站开放接口 - 文集管理 bilibili-webapp
+
+syntax = "proto3";
+package member.bilibili.com ;
+import "google/api/annotations.proto";
+import "bilibili-webapp/common.proto";
+
+option go_package = "github.com/dev-openapi/bilibili-webapp";
+
+service AnthologyService {
+    // 文集提交 https://openhome.bilibili.com/doc/4/728b35c7-21f9-d15e-6f0e-5e39c6647903
+    rpc AddAnthology(AddAnthologyReq) returns (AddAnthologyRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/article/anthology/add",
+            body: "body,form",
+        };
+    }
+    // 文集信息编辑 https://openhome.bilibili.com/doc/4/0e2f82f8-8b16-2927-0546-ac1a24871501
+    rpc EditAnthology(EditAnthologyReq) returns (EditAnthologyRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/article/anthology/edit",
+            body: "body,form",
+        };
+    }
+    // 文集下文章列表修改 https://openhome.bilibili.com/doc/4/b20487b7-471b-0717-b3b6-e65dd8a5263d
+    rpc EditArticleBelong(EditArticleBelongReq) returns (EditArticleBelongRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/article/belong",
+            body: "body,form",
+        };
+    }
+    // 文集删除 https://openhome.bilibili.com/doc/4/93289fec-1521-1f3f-c3ec-78108b4c7859
+    rpc DeleteAnthology(DeleteAnthologyReq) returns (DeleteAnthologyRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/article/anthology/delete",
+            body: "body,form",
+        };
+    }
+    // 查看文集列表 https://openhome.bilibili.com/doc/4/1caef1c1-0576-91e3-00ed-c287e9866d7e
+    rpc BatchGetAnthologies(BatchGetAnthologiesReq) returns (BatchGetAnthologiesRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/article/anthology/list",
+        };
+    }
+    // 查看文集详情 https://openhome.bilibili.com/doc/4/78228e26-1c25-5b65-e107-a08dabf45850
+    rpc GetAnthology(GetAnthologyReq) returns (GetAnthologyRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/article/anthology/detail",
+            body: "body,form",
+        };
+    }
+}
+
+message AnthologyDetail {
+    int64 list_id = 1; 
+    string name = 2;
+    string image_url = 3;
+    string summary = 4;
+}
+
+message AddAnthologyReq {
+    string client_id = 1;
+    string access_token = 2;
+    AnthologyDetail body = 10;
+}
+
+message AddAnthologyRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    AnthologyDetail data = 10; 
+}
+
+message EditAnthologyReq {
+    string client_id = 1;
+    string access_token = 2;
+    AnthologyDetail body = 10;
+}
+
+message EditAnthologyRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    AnthologyData data = 10;
+}
+
+message EditArticleBelongReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        int64 list_id = 1;
+        string article_ids = 2;
+    }
+    Body body = 10;
+}
+message EditArticleBelongRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+}
+
+message DeleteAnthologyReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        int64 id = 1;
+    }
+    Body body = 10;
+}
+
+message DeleteAnthologyRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+}
+
+message BatchGetAnthologiesReq {
+    string client_id = 1;
+    string access_token = 2;
+}
+
+message BatchGetAnthologiesRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        int64 total = 1;
+        repeated AnthologyData list = 2;
+    }
+    Data data = 10;
+}
+
+message GetAnthologyReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        int64 id = 1;
+    }
+    Body body = 10;
+}
+
+message GetAnthologyRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        AnthologyData list = 1;
+        repeated ArticleData articles = 2;
+    }
+    repeated Data data = 10;
+}
