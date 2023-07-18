@@ -13,6 +13,13 @@ service AccountService {
             get: "/arcopen/fn/user/account/info",
         };
     }
+    // 查询用户已授权权限列表 https://openhome.bilibili.com/doc/4/08f935c5-29f1-e646-85a3-0b11c2830558
+    rpc GetAccountScopes(GetAccountScopesReq) returns (GetAccountScopesRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/user/account/scopes",
+            body: "*",
+        };
+    }
 }
 
 message GetAccountInfoReq {
@@ -30,4 +37,20 @@ message GetAccountInfoRes {
         string openid = 3;
     }
     Data  data = 10;
+}
+
+message GetAccountScopesReq {
+    string client_id = 1;
+    string access_token = 2;
+}
+
+message GetAccountScopesRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        string openid = 1;
+        repeated string scopes = 2;
+    }
+    Data data = 10;
 }
