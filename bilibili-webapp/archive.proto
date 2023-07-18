@@ -3,6 +3,7 @@
 syntax = "proto3";
 package member.bilibili.com ;
 import "google/api/annotations.proto";
+import "bilibili-webapp/common.proto";
 
 option go_package = "github.com/dev-openapi/bilibili-webapp";
 
@@ -103,12 +104,6 @@ message DeleteArchiveRes {
     int32 code = 1;
     string message = 2;
     int32 ttle = 3;
-}
-
-message Page {
-    int64 pn = 1;
-    int64 ps = 2;
-    int64 total = 3;
 }
 
 message VideoInfo {

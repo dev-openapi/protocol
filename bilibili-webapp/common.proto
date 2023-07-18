@@ -1,0 +1,65 @@
+// B站开放接口 - 公共参数管理 bilibili-webapp
+
+syntax = "proto3";
+package member.bilibili.com ;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/bilibili-webapp";
+
+message Page {
+    int64 pn = 1;
+    int64 ps = 2;
+    int64 total = 3;
+}
+
+message AnthologyData {
+    int64 id = 1;
+    string name = 2;
+    string image_url = 3;
+    int64 update_time = 4;
+    int64 ctime = 5;
+    int64 publish_time = 6;
+    string summary = 7;
+    int64 words = 8;
+    int64 read = 9;
+    int64 state = 10;
+    string apply_time = 11;
+    string check_time = 12;
+    int64 total = 13;
+    string reason = 14;
+}
+
+message ArticleCategory {
+    int64 id = 1;
+    int64 parent_id = 2;
+    string name = 3;
+    repeated ArticleCategory children = 4;
+}
+
+message ArticleData {
+    message Stats {
+        int64 view = 1;
+        int64 favorite = 2;
+        int64 like = 3;
+        int64 dislike = 4;
+        int64 reply = 5;
+        int64 share = 6;
+        int64 coin = 7;
+    }
+    int64 id = 1;
+    ArticleCategory category = 2;
+    string title = 3;
+    string summary = 4;
+    string banner_url = 5;
+    int64 template_id = 6;
+    int64 state = 7;
+    repeated string image_urls = 8;
+    int64 publish_time = 9;
+    int64 ctime = 10;
+    Stats stats = 11;
+    string reason = 12;
+    int64 words = 13;
+    AnthologyData list = 14;
+    string top_video_bvid = 15;
+}
+

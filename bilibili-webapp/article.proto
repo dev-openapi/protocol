@@ -1,0 +1,197 @@
+// B站开放接口 - 专栏稿件管理 bilibili-webapp
+
+syntax = "proto3";
+package member.bilibili.com ;
+import "google/api/annotations.proto";
+import "bilibili-webapp/common.proto";
+
+option go_package = "github.com/dev-openapi/bilibili-webapp";
+
+service ArticleService {
+    // 文章提交 https://openhome.bilibili.com/doc/4/b14b77b6-8889-8c8b-2e83-17c5a4c550fb
+    rpc AddArticle(AddArticleReq) returns (AddArticleRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/article/add",
+            body: "body,form",
+        };
+    }
+    // 文章编辑 https://openhome.bilibili.com/doc/4/2b5284bd-9a40-247b-8da6-0ef7cd00afd3
+    rpc EditArticle(EditArticleReq) returns (EditArticleRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/article/edit",
+            body: "body,form"
+        };
+    }
+    // 文章删除 https://openhome.bilibili.com/doc/4/b63f8918-2add-0fbb-0718-d0537329ed1c
+    rpc DeleteArticle(DeleteArticleReq) returns (DeleteArticleRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/article/delete",
+            body: "body,form"
+        };
+    }
+    // 查看文章详情 https://openhome.bilibili.com/doc/4/243457f6-9d44-9348-06ef-366cdbb44eb4
+    rpc GetArticleDetail(GetArticleDetailReq) returns (GetArticleDetailRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/article/detail",
+            body: "body,form",
+        };
+    }
+    // 查询文章列表 https://openhome.bilibili.com/doc/4/c8057666-2b92-fc72-3607-f4199933dc13
+    rpc BatchGetArticles(BatchGetArticlesReq) returns (BatchGetArticlesRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/article/list",
+            body: "body,form",
+        };
+    }
+    // 获取文章的分类列表 https://openhome.bilibili.com/doc/4/120b97a6-24a1-4e9f-47b7-9a201196e5d3
+    rpc GetArticleCategories(GetArticleCategoriesReq) returns (GetArticleCategoriesRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/article/categories",
+        };
+    }
+    // 获取视频、文章卡片信息 https://openhome.bilibili.com/doc/4/225be808-a81a-cd82-7703-1bbd601e243d
+    rpc GetArticleCard(GetArticleCardReq) returns (GetArticleCardRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/article/card",
+            body: "body,form",
+        };
+    }
+}
+
+message Article {
+    int64 id = 1;
+    string title = 2;
+    int32 category = 3;
+    int32 template_id = 4;
+    string summary = 5;
+    string content = 6;
+    string banner_url = 7;
+    int32 original = 8;
+    string image_urls = 9;
+    string tags = 10;
+    int64 list_id = 11;
+    int32 up_closed_reply = 12;
+    string top_video_bvid = 13;
+}
+
+message AddArticleReq {
+    string client_id = 1;
+    string access_token = 2;
+    Article body = 3;
+}
+
+message AddArticleRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        int64 id = 1;
+    }
+    Data data = 4;
+}
+
+message EditArticleReq {
+    string client_id = 1;
+    string access_token = 2;
+    Article body = 3;
+}
+
+message EditArticleRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+}
+
+message DeleteArticleReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        string ids = 1;
+    }
+    Body body = 10;
+}
+
+message DeleteArticleRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+}
+
+message GetArticleDetailReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        int64 id = 1;
+    }
+    Body body = 10;
+}
+
+message GetArticleDetailRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    ArticleData data = 10;
+}
+
+message BatchGetArticlesReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        int32 pn = 1;
+        int32 ps = 2;
+        int32 sort = 3;
+        int32 group = 4;
+        int32 category = 5;
+    }
+    Body body = 10;
+}
+
+message CreationArtsType {
+    int64 all = 1;
+    int64 audit = 2;
+    int64 passed = 3;
+    int64 notPassed = 4;
+}
+
+message BatchGetArticlesRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        Page artPage = 1;
+        repeated ArticleData articles = 2;
+        CreationArtsType creationArtsType = 3;
+    }
+    Data data = 10;
+}
+
+message GetArticleCategoriesReq {
+    string client_id = 1;
+    string access_token = 2;
+}
+
+message GetArticleCategoriesRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    repeated ArticleCategory data = 10;
+}
+
+message GetArticleCardReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        int64 resource_id = 1;
+    }
+    Body body = 10;
+}
+
+message GetArticleCardRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3; 
+    message Data {
+        string snippet = 1;
+    }
+    Data data = 10;
+}
