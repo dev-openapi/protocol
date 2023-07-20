@@ -1,0 +1,141 @@
+// B站开放接口 - 视频稿件投递 bilibili-webapp
+
+syntax = "proto3";
+package member.bilibili.com ;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/bilibili-webapp";
+
+service UploadService {
+    // 文件上传预处理 https://openhome.bilibili.com/doc/4/0c532c6a-e6fb-0aff-8021-905ae2409095
+    rpc InitPart(InitPartReq) returns (InitPartRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/archive/video/init",
+            body: "body",
+        };
+    }
+    // 文件分片上传 域名用 https://openupos.bilivideo.com https://openhome.bilibili.com/doc/4/733a520a-c50f-7bb4-17cb-35338ba20500
+    rpc UploadPart(UploadPartReq) returns (UploadPartRes) {
+        option (google.api.http) = {
+            post: "/video/v2/part/upload",
+        };
+    }
+    // 分片合并 https://openhome.bilibili.com/doc/4/0828e499-38d8-9e58-2a70-a7eaebf9dd64
+    rpc CompletePart(CompletePartReq) returns (CompletePartRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/archive/video/complete",
+        };
+    }
+    // 封面上传 https://openhome.bilibili.com/doc/4/8243399e-50e3-4058-7f01-1ebe4c632cf8
+    rpc UploadCover(UploadCoverReq) returns (UploadCoverRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/archive/cover/upload",
+            body: "body,multi",
+        };
+    }
+    // 单次上传 域名用 https://openupos.bilivideo.com https://openhome.bilibili.com/doc/4/f22a0eee-c92d-0f1d-f69c-be170cf533c7
+    rpc Upload(UploadReq) returns (UploadRes) {
+        option (google.api.http) = {
+            post: "/video/v2/upload",
+            body: "body",
+        };
+    }
+    // 上传图片 https://openhome.bilibili.com/doc/4/0eaa4d3e-c4c0-f874-6f3c-e083aa939a1b
+    rpc UploadImage(UploadImageReq) returns (UploadImageRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/article/upload/image",
+            body: "body,multi",
+        };
+    }
+}
+
+message InitPartReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        string name = 1;
+        string utype = 2;
+    }
+    Body body = 10;
+}
+
+message Uptoken {
+    string upload_token = 1;
+}
+
+message InitPartRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    Uptoken data = 10;
+}
+
+message UploadPartReq {
+    string upload_token = 1;
+    int64 part_number = 2;
+}
+message UploadPartRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+}
+
+message CompletePartReq {
+    string upload_token = 1;
+}
+
+message CompletePartRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+}
+
+message UploadCoverReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        bytes file = 1;
+    }
+    Body body = 10;
+}
+message UploadCoverRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        string url = 1;
+    }
+    Data data = 10;
+}
+
+message UploadReq {
+    string upload_token = 1;
+    bytes body = 2;
+}
+
+message UploadRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+}
+
+message UploadImageReq {
+    string client_id = 1;
+    string access_token = 2;
+    message Body {
+        bytes file = 1;
+        bool watermark = 2;
+    }
+    Body body = 10;
+}
+
+message UploadImageRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    message Data {
+        string url = 1;
+        int64 size = 2;
+    }
+    Data data = 10;
+}

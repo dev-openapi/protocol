@@ -34,6 +34,19 @@ service ArchiveService {
             body: "body",
         };
     }
+    // 获取分区
+    rpc GetArchiveTypeList(GetArchiveTypeListReq) returns (GetArchiveTypeListRes) {
+        option (google.api.http) = {
+            get: "/arcopen/fn/archive/type/list",
+        };
+    }
+    // 视频稿件提交
+    rpc AddArchive(AddArchiveReq) returns (AddArchiveRes) {
+        option (google.api.http) = {
+            post: "/arcopen/fn/archive/add-by-utoken",
+            body: "body",
+        };
+    }
 }
 
 message GetArchiveReq {
@@ -132,4 +145,39 @@ message ArchiveInfo {
     int64 ptime = 9;
     VideoInfo video_info = 10;
     AdditInfo addit_info = 11;
+    string title = 12;
+}
+
+message GetArchiveTypeListReq {
+    string client_id = 1;
+    string access_token = 2;
+}
+
+message ArchiveType {
+    int64 id = 1;
+    int64 parent = 2;
+    string name = 3;
+    string description = 4;
+    repeated ArchiveType children = 5;
+}
+
+message GetArchiveTypeListRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    repeated ArchiveType data = 10;
+}
+
+message AddArchiveReq {
+    string client_id = 1;
+    string access_token = 2;
+    string upload_token = 3;
+    ArchiveInfo body = 10;
+}
+
+message AddArchiveRes {
+    int32 code = 1;
+    string message = 2;
+    int32 ttl = 3;
+    ArchiveInfo data = 10;
 }
