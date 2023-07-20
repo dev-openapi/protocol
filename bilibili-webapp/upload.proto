@@ -37,7 +37,7 @@ service UploadService {
     rpc Upload(UploadReq) returns (UploadRes) {
         option (google.api.http) = {
             post: "/video/v2/upload",
-            body: "body",
+            body: "body,byte",
         };
     }
     // 上传图片 https://openhome.bilibili.com/doc/4/0eaa4d3e-c4c0-f874-6f3c-e083aa939a1b
