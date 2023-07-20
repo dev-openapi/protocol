@@ -59,15 +59,14 @@ message InitPartReq {
     Body body = 10;
 }
 
-message Uptoken {
-    string upload_token = 1;
-}
-
 message InitPartRes {
     int32 code = 1;
     string message = 2;
     int32 ttl = 3;
-    Uptoken data = 10;
+    message Data {
+        string upload_token = 1;
+    }
+    Data data = 10;
 }
 
 message UploadPartReq {
