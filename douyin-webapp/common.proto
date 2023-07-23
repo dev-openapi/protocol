@@ -1,0 +1,50 @@
+// 抖音移动/网站应用接口
+
+syntax = "proto3";
+package open.douyin.com ;
+import "google/api/annotations.proto";
+
+option go_package = "github.com/dev-openapi/douyin-webapp";
+
+message Extra {
+    string log_id = 1;
+    int64 now = 2;
+    int32 error_code = 3;
+    string description = 4;
+    int32 sub_error_code = 5;
+    string sub_description = 6;
+}
+
+message UserInfo {
+    int64 error_code = 1;
+    string description = 2;
+    string avatar = 10;
+    string nickname = 11;
+    string open_id = 12;
+    string e_account_role = 13;
+    string union_id = 14;
+    string encrypt_mobile = 15;
+}
+
+message VideoStat {
+    int64 digg_count = 1;
+    int64 download_count = 2;
+    int64 play_count = 3;
+    int64 share_count = 4;
+    int64 forward_count = 5;
+    int64 comment_count = 6;
+}
+
+message VideoData {
+    string title = 1;
+    int64 create_time = 2;
+    int32 video_status = 3;
+    string share_url = 4;
+    string cover = 5;
+    bool is_top = 6;
+    string item_id = 7;
+    bool is_reviewed = 8;
+    int32 media_type = 9;
+    VideoStat statistics = 10;
+}
+

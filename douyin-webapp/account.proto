@@ -1,60 +1,51 @@
-// 抖音移动/网站应用接口 douyin-webapp
+// 抖音移动/网站应用接口 - 用户管理
 
 syntax = "proto3";
 package open.douyin.com ;
 import "google/api/annotations.proto";
-import "douyin-webapp/extra.proto";
+import "douyin-webapp/common.proto";
 
 option go_package = "github.com/dev-openapi/douyin-webapp";
 
 service AccountService {
-    // 获取用户公开信息 https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/account-management/get-account-open-info
-    rpc GetUserInfo(GetUserInfoReq) returns (GetUserInfoRes) {
-        option (google.api.http) = {
-            post: "/oauth/userinfo",
-            body: "*,form"
-        };
+  // 获取用户公开信息
+  rpc GetUserInfo(GetUserInfoReq) returns (GetUserInfoRes) {
+    option (google.api.http) = {
+      post: "/oauth/userinfo/",
+      body: "*,form",
     };
-    // 粉丝判断 https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/account-management/fans-judge
-    rpc FansCheck(FansCheckReq) returns (FansCheckRes) {
-        option (google.api.http) = {
-            post: "/fans/check",
-            body: "*"
-        };
-    }
+  }
+  // 粉丝判断 header放access-token
+  rpc CheckFans(CheckFansReq) returns (CheckFansRes) {
+    option (google.api.http) = {
+      get: "/fans/check/",
+    };
+  }
 }
 
-message GetUserInfoReq {
-    string access_token = 1;
-    string open_id = 2;
-}
-
-message UserInfo {
-    string avatar = 1;
-    string nickname = 2;
-    string open_id = 5;
-    string description = 6;
-    string e_account_role = 7;
-    int32 error_code = 8;
-    string union_id = 9;
-    string encrypt_mobile = 100; // 加密手机号，需要解密
+message  GetUserInfoReq {
+  string access_token = 1;
+  string open_id = 2;
 }
 
 message GetUserInfoRes {
-    string message = 1;
-    UserInfo data = 2;
+  string message = 1;
+  Extra extra = 2;
+  UserInfo data = 10;
 }
 
-message FansCheckReq {
-    string follower_open_id = 1;
-    string open_id = 2;
+message CheckFansReq {
+  string follower_open_id = 1;
+  string open_id = 2;
 }
 
-message FansCheckRes {
-    message Data {
-        bool is_follower = 1;
-        int64 follow_time = 2;
-    }
-    Extra extra = 1;
-    Data data =2;
+message CheckFansRes {
+  Extra extra = 1;
+  message Data {
+    int64 error_code = 1;
+    string description = 2;
+    bool is_follower = 10;
+    int64 follow_time = 11;
+  }
+  Data data = 10;
 }
