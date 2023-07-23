@@ -1,0 +1,140 @@
+// 抖音移动/网站应用接口 - 视频数据
+
+syntax = "proto3";
+package open.douyin.com ;
+import "google/api/annotations.proto";
+import "douyin-webapp/common.proto";
+
+option go_package = "github.com/dev-openapi/douyin-webapp";
+
+service ItemdataService {
+    // 获取视频基础数据 header 放 access-token
+    rpc GetItemBaseData(GetItemBaseDataReq) returns (GetItemBaseDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/item/base/",
+        };
+    }
+    // 获取视频点赞数据
+    rpc GetItemLikeData(GetItemLikeDataReq) returns (GetItemLikeDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/item/like/",
+        };
+    }
+    // 获取视频评论数据
+    rpc GetItemCommentData(GetItemCommentDataReq) returns (GetItemCommentDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/item/comment/",
+        };
+    }
+    // 获取视频播放数据
+    rpc GetItemPlayData(GetItemPlayDataReq) returns (GetItemPlayDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/item/play/",
+        };
+    }
+    // 获取视频分享数据
+    rpc GetItemShareData(GetItemShareDataReq) returns (GetItemShareDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/item/share/",
+        };
+    }
+}
+
+message GetItemBaseDataReq {
+    string open_id = 1;
+    string item_id = 2;
+}
+
+message ItemBaseData {
+    int64 total_share = 1;
+    float avg_play_duration = 2;
+    int64 total_play = 3;
+    int64 total_like = 4;
+    int64 total_comment = 5;
+}
+
+message GetItemBaseDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        ItemBaseData result = 10;
+    }
+    Data data = 10;
+}
+
+message GetItemLikeDataReq {
+    string open_id = 1;
+    string item_id = 2;
+    int64 date_type = 3;
+}
+message ItemLikeData {
+    string date = 1;
+    int64 like = 2;
+}
+message GetItemLikeDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated ItemLikeData result_list = 10;
+    }
+    Data data = 10;
+}
+
+message GetItemCommentDataReq {
+    string open_id = 1;
+    string item_id = 2;
+    int64 date_type = 3;
+}
+message ItemCommentData {
+    string date = 1;
+    int64 comment = 2;
+}
+message GetItemCommentDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated ItemCommentData result_list = 10;
+    }
+    Data data = 10;
+}
+
+message GetItemPlayDataReq {
+    string open_id = 1;
+    string item_id = 2;
+    int64 date_type = 3;
+}
+message ItemPlayData {
+    string date = 1;
+    int64 play = 2;
+}
+message GetItemPlayDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated ItemPlayData result_list = 10;
+    }
+    Data data = 10;
+}
+
+message GetItemShareDataReq {
+    string open_id = 1;
+    string item_id = 2;
+    int64 date_type = 3;
+}
+message ItemShareData {
+    string date = 1;
+    int64 share = 2;
+}
+message GetItemShareDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated ItemShareData result_list = 10;
+    }
+    Data data = 10;
+}
