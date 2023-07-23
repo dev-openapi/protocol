@@ -9,44 +9,44 @@ option go_package = "github.com/dev-openapi/douyin-webapp";
 
 service UserdataService {
     // 获取用户视频情况 header放 access-token
-    rpc GetItemData(GetItemDataReq) returns (GetItemDataRes) {
+    rpc GetUserItemData(GetUserItemDataReq) returns (GetUserItemDataRes) {
         option (google.api.http) = {
             get: "/data/external/user/item/",
         };
     }
     // 获取用户粉丝数数 header 放 access-token
-    rpc GetFansData(GetFansDataReq) returns (GetFansDataRes) {
+    rpc GetUserFansData(GetUserFansDataReq) returns (GetUserFansDataRes) {
         option (google.api.http) = {
             get: "/data/external/user/fans/",
         };
     }
     // 获取用户点赞数 header 放 access-token
-    rpc GetLikeData(GetLikeDataReq) returns (GetLikeDataRes) {
+    rpc GetUserLikeData(GetUserLikeDataReq) returns (GetUserLikeDataRes) {
         option (google.api.http) = {
             get: "/data/external/user/like/",
         };
     }
     // 获取用户评论数 header 放 access-token
-    rpc GetCommentData(GetCommentDataReq) returns (GetCommentDataRes) {
+    rpc GetUserCommentData(GetUserCommentDataReq) returns (GetUserCommentDataRes) {
         option (google.api.http) = {
             get: "/data/external/user/comment/",
         };
     }
     // 获取用户分享数 header 放 access-token
-    rpc GetShareData(GetShareDataReq) returns (GetShareDataRes) {
+    rpc GetUserShareData(GetUserShareDataReq) returns (GetUserShareDataRes) {
         option (google.api.http) = {
             get: "/data/external/user/share/",
         };
     }
     // 获取用户主页访问数 header 放 access-token
-    rpc GetProfileData(GetProfileDataReq) returns (GetProfileDataRes) {
+    rpc GetUserProfileData(GetUserProfileDataReq) returns (GetUserProfileDataRes) {
         option (google.api.http) = {
             get: "/data/external/user/profile/",
         };
     }
 }
 
-message GetItemDataReq {
+message GetUserItemDataReq {
     string open_id = 1;
     int64 date_type = 2;
 }
@@ -58,7 +58,7 @@ message UserItemData {
     int64 new_issue = 4;
 }
 
-message GetItemDataRes {
+message GetUserItemDataRes {
     Extra extra = 1;
     message Data {
         int64 error_code = 1;
@@ -68,7 +68,7 @@ message GetItemDataRes {
     Data data = 10;
 }
 
-message GetFansDataReq {
+message GetUserFansDataReq {
     string open_id = 1;
     int64 date_type = 2;
 }
@@ -79,7 +79,7 @@ message UserFansData {
     int64 new_fans = 3;
 }
 
-message GetFansDataRes {
+message GetUserFansDataRes {
     Extra extra = 1;
     message Data {
         int64 error_code = 1;
@@ -89,7 +89,7 @@ message GetFansDataRes {
     Data data = 10;
 }
 
-message GetLikeDataReq {
+message GetUserLikeDataReq {
     string open_id = 1;
     int64 date_type = 2;
 }
@@ -99,7 +99,7 @@ message UserLikeData {
     int64 new_like = 2;
 }
 
-message GetLikeDataRes {
+message GetUserLikeDataRes {
     Extra extra = 1;
     message Data {
         int64 error_code = 1;
@@ -109,7 +109,7 @@ message GetLikeDataRes {
     Data data = 10;
 }
 
-message GetCommentDataReq {
+message GetUserCommentDataReq {
     string open_id = 1;
     int64 date_type = 2;
 }
@@ -119,7 +119,7 @@ message UserCommentData {
     int64 new_comment = 2;
 }
 
-message GetCommentDataRes {
+message GetUserCommentDataRes {
     Extra extra = 1;
     message Data {
         int64 error_code = 1;
@@ -129,7 +129,7 @@ message GetCommentDataRes {
     Data data = 10;
 }
 
-message GetShareDataReq {
+message GetUserShareDataReq {
     string open_id = 1;
     int64 date_type = 2;
 }
@@ -139,7 +139,7 @@ message UserShareData {
     int64 new_share = 2;
 }
 
-message GetShareDataRes {
+message GetUserShareDataRes {
     Extra extra = 1;
     message Data {
         int64 error_code = 1;
@@ -149,7 +149,7 @@ message GetShareDataRes {
     Data data = 10;
 }
 
-message GetProfileDataReq {
+message GetUserProfileDataReq {
     string open_id = 1;
     int64 date_type = 2;
 }
@@ -159,7 +159,7 @@ message UserProfileData {
     int64 profile_uv = 2;
 }
 
-message GetProfileDataRes {
+message GetUserProfileDataRes {
     Extra extra = 1;
     message Data {
         int64 error_code = 1;
