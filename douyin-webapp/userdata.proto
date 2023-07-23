@@ -1,0 +1,170 @@
+// 抖音移动/网站应用接口 - 用户数据
+
+syntax = "proto3";
+package open.douyin.com ;
+import "google/api/annotations.proto";
+import "douyin-webapp/common.proto";
+
+option go_package = "github.com/dev-openapi/douyin-webapp";
+
+service UserdataService {
+    // 获取用户视频情况 header放 access-token
+    rpc GetItemData(GetItemDataReq) returns (GetItemDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/user/item/",
+        };
+    }
+    // 获取用户粉丝数数 header 放 access-token
+    rpc GetFansData(GetFansDataReq) returns (GetFansDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/user/fans/",
+        };
+    }
+    // 获取用户点赞数 header 放 access-token
+    rpc GetLikeData(GetLikeDataReq) returns (GetLikeDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/user/like/",
+        };
+    }
+    // 获取用户评论数 header 放 access-token
+    rpc GetCommentData(GetCommentDataReq) returns (GetCommentDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/user/comment/",
+        };
+    }
+    // 获取用户分享数 header 放 access-token
+    rpc GetShareData(GetShareDataReq) returns (GetShareDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/user/share/",
+        };
+    }
+    // 获取用户主页访问数 header 放 access-token
+    rpc GetProfileData(GetProfileDataReq) returns (GetProfileDataRes) {
+        option (google.api.http) = {
+            get: "/data/external/user/profile/",
+        };
+    }
+}
+
+message GetItemDataReq {
+    string open_id = 1;
+    int64 date_type = 2;
+}
+
+message UserItemData {
+    string date = 1;
+    int64 new_play = 2;
+    int64 total_issue = 3;
+    int64 new_issue = 4;
+}
+
+message GetItemDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated UserItemData result_list = 10;
+    }
+    Data data = 10;
+}
+
+message GetFansDataReq {
+    string open_id = 1;
+    int64 date_type = 2;
+}
+
+message UserFansData {
+    string date = 1;
+    int64 total_fans = 2;
+    int64 new_fans = 3;
+}
+
+message GetFansDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated UserFansData result_list = 10;
+    }
+    Data data = 10;
+}
+
+message GetLikeDataReq {
+    string open_id = 1;
+    int64 date_type = 2;
+}
+
+message UserLikeData {
+    string date = 1;
+    int64 new_like = 2;
+}
+
+message GetLikeDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated UserLikeData result_list = 10;
+    }
+    Data data = 10;
+}
+
+message GetCommentDataReq {
+    string open_id = 1;
+    int64 date_type = 2;
+}
+
+message UserCommentData {
+    string date = 1;
+    int64 new_comment = 2;
+}
+
+message GetCommentDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated UserCommentData result_list = 10;
+    }
+    Data data = 10;
+}
+
+message GetShareDataReq {
+    string open_id = 1;
+    int64 date_type = 2;
+}
+
+message UserShareData {
+    string date = 1;
+    int64 new_share = 2;
+}
+
+message GetShareDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated UserShareData result_list = 10;
+    }
+    Data data = 10;
+}
+
+message GetProfileDataReq {
+    string open_id = 1;
+    int64 date_type = 2;
+}
+
+message UserProfileData {
+    string date = 1;
+    int64 profile_uv = 2;
+}
+
+message GetProfileDataRes {
+    Extra extra = 1;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated UserProfileData result_list = 10;
+    }
+    Data data = 10;
+}

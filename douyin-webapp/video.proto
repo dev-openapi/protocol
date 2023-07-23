@@ -1,71 +1,60 @@
-// 抖音移动/网站应用接口 douyin-webapp
+// 抖音移动/网站应用接口 - 视频管理
 
 syntax = "proto3";
 package open.douyin.com ;
 import "google/api/annotations.proto";
-import "douyin-webapp/extra.proto";
+import "douyin-webapp/common.proto";
 
 option go_package = "github.com/dev-openapi/douyin-webapp";
 
-
 service VideoService {
-    // 创建图文 https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/video-management/douyin/create-image-text/create-image-text
-    rpc CreateImageText(CreateImageTextReq) returns (CreateImageTextRes) {
+    // 查询特定视频的视频数据 header放access-token
+    rpc GetVideoData(GetVideoDataReq) returns (GetVideoDataRes) {
         option (google.api.http) = {
-            post: "/api/douyin/v1/video/create_image_text",
-            body: "body"
+            post: "/api/douyin/v1/video/video_data/",
+            body: "body",
         };
-    };
-    // 图片上传 https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/video-management/douyin/create-image-text/image-upload
-    rpc UploadImage(UploadImageReq) returns (UploadImageRes) {
+    }
+    // 查询授权帐号视频列表 header放access-token
+    rpc GetVideoList(GetVideoListReq) returns (GetVideoListRes) {
         option (google.api.http) = {
-            post: "/api/douyin/v1/video/upload_image",
-            body: "body,multi"
+            get: "/api/douyin/v1/video/video_list/",
         };
     }
 }
 
-message CreateImageTextReq {
+message GetVideoDataReq {
     string open_id = 1;
     message Body {
-        repeated string image_list = 1;
-        string text = 2;
-        repeated string at_users = 3;
-        string micro_app_title = 4;
-        string micro_app_url = 5;
-        string micro_appi_id = 6;
-        string poi_id = 7;
+        repeated string item_ids = 1;
+        repeated string video_ids = 2;
     }
     Body body = 10;
 }
 
-message CreateImageTextRes {
-    message Data {
-        string item_id = 1;
-        string video_id = 2;
-    }
+message GetVideoDataRes {
     Extra extra = 1;
-    Data data = 2;
+    message Data {
+        int64 error_code = 1;
+        string description = 2;
+        repeated VideoData list = 10;
+    }
+    Data data = 10;
 }
 
-message UploadImageReq {
+message GetVideoListReq {
     string open_id = 1;
-    message Body {
-        bytes image = 1;
-    }
-    Body body = 10;
+    int64 cursor = 2;
+    int32 count = 3;
 }
 
-message Image {
-    string image_id = 1;
-    int32 height = 2;
-    int32 width = 3;
-}
-
-message UploadImageRes {
+message GetVideoListRes {
     Extra extra = 1;
     message Data {
-        Image image = 1;
+        int64 error_code = 1;
+        string description = 2;
+        bool has_more = 3;
+        repeated VideoData list = 10;
     }
     Data data = 10;
 }
